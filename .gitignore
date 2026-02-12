@@ -1,0 +1,20 @@
+# Kubernetes secrets - never commit
+*Kubeconfig*
+*kubeconfig*
+*.kubeconfig
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Build artifacts
+*.o
+*.out
+
+# IDE / local
+.vincent/
+.DS_Store

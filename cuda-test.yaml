@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cuda-test
+spec:
+  restartPolicy: Never
+  nodeSelector:
+    kubernetes.io/hostname: g127fd6
+  containers:
+    - name: cuda
+      image: nvidia/cuda:12.4.1-devel-ubuntu22.04
+      command: ["bash", "-lc", "sleep infinity"]
+      resources:
+        limits:
+          nvidia.com/gpu: 1
