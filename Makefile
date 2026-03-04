@@ -1,7 +1,6 @@
 # ---- Config ----
 POD ?= cuda-dev
 REMOTE_DIR ?= /workspace/work
-VENV_DIR ?= /workspace/venv
 ARCH ?= sm_90
 NVCC_FLAGS = -O3 -arch=$(ARCH) -lineinfo
 
@@ -9,11 +8,11 @@ NVCC_FLAGS = -O3 -arch=$(ARCH) -lineinfo
 KUBECONFIG ?= $(HOME)/cuda-play/CWKubeconfig_new-cluster
 export KUBECONFIG
 
-# macOS tar noise suppression
-TARFLAGS = --no-xattrs --no-mac-metadata
+# macOS tar noise suppression + exclude local venv
+TARFLAGS = --no-xattrs --no-mac-metadata --exclude=.venv --exclude=venv
 
 # ---- Helpers ----
-.PHONY: sync shell lsremote build run clean py-setup py-deps triton-run triton-clean
+.PHONY: sync shell lsremote build run clean py-setup py-deps triton-run triton-mlp triton-mlp-sweep triton-clean
 
 sync:
 	@echo "Syncing $(CURDIR) -> $(POD):$(REMOTE_DIR)..."
@@ -40,36 +39,49 @@ run: build
 clean:
 	kubectl exec -it $(POD) -- bash -lc 'cd $(REMOTE_DIR) && for f in *.cu; do rm -f "$${f%.cu}"; done'
 
-# Install python + venv tooling inside the container if missing
+# Install uv inside the container if missing
 py-setup:
 	kubectl exec -it $(POD) -- bash -lc '\
 		set -e; \
-		if command -v python3 >/dev/null 2>&1; then echo "python3 OK"; else \
-			echo "Installing python3..."; \
-			apt-get update && apt-get install -y python3 python3-pip; \
-		fi; \
-		if python3 -c "import venv" >/dev/null 2>&1; then echo "venv OK"; else \
-			echo "Installing python3-venv..."; \
-			apt-get update && apt-get install -y python3-venv; \
+		export PATH="$$HOME/.local/bin:$$PATH"; \
+		if command -v uv >/dev/null 2>&1; then echo "uv OK"; else \
+			echo "Installing uv..."; \
+			apt-get update -qq && apt-get install -y -qq curl >/dev/null; \
+			curl -LsSf https://astral.sh/uv/install.sh | sh; \
+			export PATH="$$HOME/.local/bin:$$PATH"; \
+			uv --version; \
 		fi'
 
-# Create venv (idempotent) + install deps
+# Sync + install deps with uv
 py-deps: sync py-setup
 	kubectl exec -it $(POD) -- bash -lc '\
 		set -e; \
-		if [ ! -d "$(VENV_DIR)" ]; then python3 -m venv $(VENV_DIR); fi; \
-		. $(VENV_DIR)/bin/activate; \
-		python -m pip install -U pip; \
-		python -m pip install -U torch triton'
+		export PATH="$$HOME/.local/bin:$$PATH"; \
+		cd $(REMOTE_DIR); \
+		uv sync'
 
 # Run your Triton benchmark
 triton-run: py-deps
 	kubectl exec -it $(POD) -- bash -lc '\
 		set -e; \
-		. $(VENV_DIR)/bin/activate; \
+		export PATH="$$HOME/.local/bin:$$PATH"; \
 		cd $(REMOTE_DIR); \
-		python triton_vadd_bench.py'
+		uv run triton_vadd_bench.py'
 
-# Clean venv if you want a fresh reinstall
+triton-mlp: py-deps
+	kubectl exec -it $(POD) -- bash -lc '\
+		export PATH="$$HOME/.local/bin:$$PATH"; \
+		export PYTHONUNBUFFERED=1; \
+		cd $(REMOTE_DIR); \
+		uv run triton_mlp.py 2>&1'
+
+triton-mlp-sweep: py-deps
+	kubectl exec -it $(POD) -- bash -lc '\
+		set -e; \
+		export PATH="$$HOME/.local/bin:$$PATH"; \
+		cd $(REMOTE_DIR); \
+		uv run triton_mlp_sweep.py --M 4096 --din 1024 --dhid 2048 --dout 1024 --iters 80 --warmup 30'
+
+# Clean .venv if you want a fresh reinstall
 triton-clean:
-	kubectl exec -it $(POD) -- bash -lc 'rm -rf $(VENV_DIR)'
+	kubectl exec -it $(POD) -- bash -lc 'rm -rf $(REMOTE_DIR)/.venv'

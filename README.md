@@ -8,6 +8,8 @@ CUDA experiments and benchmarks. Includes a raw CUDA vadd kernel and a Triton va
 2. Set `KUBECONFIG` to your cluster config (not checked in for security).
 3. `make sync` to push code to the pod.
 
+Python deps use [uv](https://docs.astral.sh/uv/). `make py-deps` installs uv in the container and syncs deps from `pyproject.toml`.
+
 ## Targets
 
 | Target | Description |
@@ -16,7 +18,9 @@ CUDA experiments and benchmarks. Includes a raw CUDA vadd kernel and a Triton va
 | `make build` | Compile all `.cu` files |
 | `make run`   | Build and run CUDA binaries |
 | `make shell` | Exec into the pod |
+| `make py-deps` | Install uv + sync Python deps |
 | `make triton-run` | Run Triton vadd benchmark |
+| `make triton-mlp` | Run Triton MLP benchmark |
 
 ## Config
 
