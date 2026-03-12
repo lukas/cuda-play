@@ -1,0 +1,12 @@
+---
+description: Do not claim something works without testing it
+alwaysApply: true
+---
+
+# Test Before Claiming
+
+**Never tell the user something is working or fixed unless you have actually run it and verified.**
+
+- Run the relevant command/script/test before saying "it should work now" or "try again"
+- If a fix requires specific env (cluster, API keys) that you cannot satisfy, say so explicitly instead of suggesting it will work
+- Prefer testing in this workspace over assuming changes apply correctly

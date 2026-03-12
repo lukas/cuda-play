@@ -1,0 +1,29 @@
+---
+description: Detect looping behavior and course-correct
+alwaysApply: true
+---
+
+# Anti-Looping: Detect and Course-Correct
+
+Before each response, briefly self-check:
+
+## Loop Detection
+
+You may be looping if:
+- You've said you'll do something 2+ times without actually invoking the tool
+- You're repeating the same tool call intent (e.g. "adding the targets", "creating the file") without executing
+- A search_replace failed and you're retrying the same approach
+- You're about to make the same edit you attempted in the last 2–3 turns
+
+## Course-Correction
+
+If you detect looping:
+1. **Stop** – Do not repeat the same action or message
+2. **Switch strategy** – e.g. use `write` instead of `search_replace`, or use a terminal command instead of a file edit
+3. **Verify state** – Read the file or run a command to confirm current state before editing
+4. **One decisive action** – Execute a single tool call that accomplishes the goal, then verify
+
+## Examples
+
+- **Looping**: "Adding the Makefile targets... The file has been updated." (repeated, no actual edit)
+- **Course-correct**: Read the file → construct corrected content → one `write` call → verify with `make -n`
