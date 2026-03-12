@@ -1,0 +1,12 @@
+---
+description: Read and maintain autollm agent handoff context
+alwaysApply: true
+---
+
+# autollm Agent Handoff
+
+Before doing substantive work in `autollm`, read `autollm/docs/AGENT_HANDOFF.md`.
+
+- Use it as the primary durable handoff for sweep/improve workflow, benchmark flow, and `runllm` integration.
+- When you learn stable, reusable context about architecture, contracts, or recurring failure modes, add a brief note to `autollm/docs/AGENT_HANDOFF.md`.
+- Do not add transient run results or noisy one-off debugging details there.
