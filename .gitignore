@@ -27,3 +27,6 @@ results/
 
 # Secrets (never commit)
 .env
+
+# autollm is a separate repo (github.com/lukas/autollm)
+autollm/

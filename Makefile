@@ -26,7 +26,7 @@ export KUBECONFIG
 TARFLAGS = --no-xattrs --no-mac-metadata --exclude=.venv --exclude=venv --exclude=.env
 
 # ---- Helpers ----
-.PHONY: sync shell lsremote build run clean profile profile-pull profile-new ncu-setup ncu-profile ncu-pull ncu-new py-setup py-deps triton-run triton-mlp triton-mlp-sweep triton-clean llama-deps llama-run llama-nsys llama-ncu llama-web llama-web-forward runllm-apply runllm-forward runllm-test autollm-dashboard autollm-benchmark
+.PHONY: sync shell lsremote build run clean profile profile-pull profile-new ncu-setup ncu-profile ncu-pull ncu-new py-setup py-deps triton-run triton-mlp triton-mlp-sweep triton-clean llama-deps llama-run llama-nsys llama-ncu llama-web llama-web-forward
 
 sync:
 	@echo "Syncing $(CURDIR) -> $(POD):$(REMOTE_DIR)..."
@@ -236,19 +236,3 @@ llama-web-forward:
 	echo "Open http://localhost:7861"; \
 	kubectl port-forward $(POD) 7861:7861
 
-# ---- runllm (vLLM on Kubernetes) ----
-runllm-apply:
-	$(MAKE) -C runllm apply
-
-runllm-forward:
-	$(MAKE) -C runllm forward
-
-runllm-test:
-	$(MAKE) -C runllm test
-
-# ---- autollm (benchmarks, dashboard, AI optimizer) ----
-autollm-dashboard:
-	$(MAKE) -C autollm dashboard
-
-autollm-benchmark:
-	$(MAKE) -C autollm benchmark-run DESCRIPTION="$(DESCRIPTION)"
