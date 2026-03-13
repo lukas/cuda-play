@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vllm-qwen
+spec:
+  restartPolicy: Always
+  nodeSelector:
+    compute.coreweave.com/node-pool: lukas-4h200-pool
+  containers:
+    - name: vllm
+      image: vllm/vllm-openai:nightly
+      env:
+        - name: HUGGING_FACE_HUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-token
+              key: token
+              optional: true
+      args:
+        - "--model"
+        - "Qwen/Qwen2.5-1.5B-Instruct"
+        - "--tensor-parallel-size"
+        - "1"
+        - "--max-model-len"
+        - "4096"
+        - "--gpu-memory-utilization"
+        - "0.95"
+        - "--dtype"
+        - "half"
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+      ports:
+        - containerPort: 8000

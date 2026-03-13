@@ -3,8 +3,8 @@ import math
 import time
 from dataclasses import dataclass
 import torch
-import triton
-import triton.language as tl
+import triton  # type: ignore[import-untyped]
+import triton.language as tl  # type: ignore[import-untyped]
 
 # ---------------- Kernel ----------------
 

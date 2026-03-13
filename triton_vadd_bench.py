@@ -1,7 +1,7 @@
 import time
 import torch
-import triton
-import triton.language as tl
+import triton  # type: ignore[import-untyped]
+import triton.language as tl  # type: ignore[import-untyped]
 
 
 @triton.jit

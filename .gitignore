@@ -15,6 +15,15 @@ venv/
 *.o
 *.out
 
+# Profiling
+profiles/
+*.nsys-rep
+*.ncu-rep
+results/
+
 # IDE / local
 .vincent/
 .DS_Store
+
+# Secrets (never commit)
+.env

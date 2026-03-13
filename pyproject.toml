@@ -6,6 +6,8 @@ requires-python = ">=3.10"
 dependencies = [
 	"numpy",
 	"torch",
-	"triton",
 ]
+[project.optional-dependencies]
+gpu = ["triton"]
+llama = ["transformers>=4.40", "accelerate", "gradio"]
 

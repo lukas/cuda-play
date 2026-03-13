@@ -5,15 +5,15 @@ metadata:
 spec:
   restartPolicy: Always
   nodeSelector:
-    compute.coreweave.com/node-pool: test-node-pool
+    compute.coreweave.com/node-pool: lukas-4h200-pool
   containers:
     - name: cuda
-      image: nvidia/cuda:12.4.1-devel-ubuntu22.04
+      image: nvcr.io/nvidia/tensorrt-llm/release:1.3.0rc6
       command: ["sleep"]
       args: ["infinity"]
       resources:
         limits:
-          nvidia.com/gpu: 1
+          nvidia.com/gpu: 4
       volumeMounts:
         - name: workspace
           mountPath: /workspace
