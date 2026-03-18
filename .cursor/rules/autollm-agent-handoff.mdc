@@ -1,12 +1,21 @@
 ---
-description: Read and maintain autollm agent handoff context
+description: Keep autollm docs current and concise after every change
 alwaysApply: true
 ---
 
-# autollm Agent Handoff
+# autollm Docs Maintenance
 
 Before doing substantive work in `autollm`, read `autollm/docs/AGENT_HANDOFF.md`.
 
-- Use it as the primary durable handoff for sweep/improve workflow, benchmark flow, and `runllm` integration.
-- When you learn stable, reusable context about architecture, contracts, or recurring failure modes, add a brief note to `autollm/docs/AGENT_HANDOFF.md`.
-- Do not add transient run results or noisy one-off debugging details there.
+## After every code change in `autollm`
+
+1. **Update `autollm/docs/AGENT_HANDOFF.md`** — reflect the change: new files, renamed concepts, changed contracts, new gotchas.
+2. **Update `autollm/README.md`** — keep user-facing docs (setup, commands, presets, env vars, examples) accurate.
+3. **Shorten both files** — every edit is an opportunity to trim. Remove stale info, merge redundant sections, tighten wording. Aim to keep AGENT_HANDOFF.md under 300 lines and README.md under 250 lines.
+
+## Content guidelines
+
+- `AGENT_HANDOFF.md` is for durable agent context: architecture, contracts, recurring failure modes, operational gotchas. No transient run results or one-off debugging.
+- `README.md` is for humans: setup, workflow, command reference, env vars. No internal implementation details.
+- If a section hasn't been relevant in 2+ conversations, consider removing it.
+- Prefer tables and bullet points over prose.
