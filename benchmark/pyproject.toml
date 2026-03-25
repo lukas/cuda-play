@@ -1,0 +1,15 @@
+[project]
+name = "benchmark"
+version = "0.1.0"
+description = "Benchmark inference APIs — latency, throughput, time-to-first-token"
+requires-python = ">=3.10"
+dependencies = [
+    "aiohttp>=3.9",
+    "openai>=1.0",
+    "rich>=13.0",
+    "click>=8.0",
+    "datasets>=2.0",
+]
+
+[project.scripts]
+bench = "bench:cli"

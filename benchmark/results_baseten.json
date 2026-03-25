@@ -1,0 +1,20 @@
+{
+  "total": 200,
+  "successes": 200,
+  "failures": 0,
+  "wall_time_s": 273.123,
+  "total_prompt_tokens": 40200,
+  "total_completion_tokens": 20500,
+  "throughput_req_per_s": 0.73,
+  "throughput_tok_per_s": 75.06,
+  "output_tok_per_s_mean": 116.2,
+  "output_tok_per_s_p50": 112.3,
+  "output_tok_per_s_p90": 221.7,
+  "latency_mean_s": 1.365,
+  "latency_p50_s": 0.795,
+  "latency_p90_s": 3.421,
+  "latency_p99_s": 5.792,
+  "ttft_mean_s": 0.358,
+  "ttft_p50_s": 0.301,
+  "ttft_p90_s": 0.456
+}
